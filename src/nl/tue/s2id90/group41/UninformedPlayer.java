@@ -3,6 +3,7 @@ package nl.tue.s2id90.group41;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import nl.tue.s2id90.draughts.DraughtsState;
 import nl.tue.s2id90.draughts.player.DraughtsPlayer;
 import org10x10.dam.game.Move;
@@ -21,8 +22,7 @@ public class UninformedPlayer extends DraughtsPlayer {
     /** @return a random move **/
     public Move getMove(DraughtsState s) {
         List<Move> moves = s.getMoves();
-        Collections.shuffle(moves);
-        return moves.get(0);
+        return moves.get(ThreadLocalRandom.current().nextInt(moves.size()));
     }
 
     @Override
