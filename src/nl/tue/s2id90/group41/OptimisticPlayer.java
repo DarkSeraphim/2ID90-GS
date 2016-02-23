@@ -1,6 +1,5 @@
 package nl.tue.s2id90.group41;
 
-
 import java.util.List;
 import nl.tue.s2id90.draughts.DraughtsState;
 import nl.tue.s2id90.draughts.player.DraughtsPlayer;
@@ -11,20 +10,24 @@ import org10x10.dam.game.Move;
  * and values all moves with value 0.
  * @author huub
  */
-public class OptimisticPlayer extends DraughtsPlayer {
-
-    public OptimisticPlayer() {
+public class OptimisticPlayer extends DraughtsPlayer
+{
+    public OptimisticPlayer()
+    {
         super(UninformedPlayer.class.getResource("resources/optimist.png"));
     }
+    
     @Override
     /** @return a random move **/
-    public Move getMove(DraughtsState s) {
+    public Move getMove(DraughtsState s)
+    {
         List<Move> moves = s.getMoves();
         return moves.get(0);
     }
 
     @Override
-    public Integer getValue() {
+    public Integer getValue()
+    {
         return 0;
     }
 }
