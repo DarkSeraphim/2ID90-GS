@@ -1,5 +1,8 @@
 package nl.tue.s2id90.group41;
 
+import nl.tue.s2id90.group41.players.OptimisticPlayer;
+import nl.tue.s2id90.group41.players.StupidPlayer;
+import nl.tue.s2id90.group41.players.UninformedPlayer;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 import nl.tue.s2id90.draughts.DraughtsPlayerProvider;
 import nl.tue.s2id90.draughts.DraughtsPlugin;

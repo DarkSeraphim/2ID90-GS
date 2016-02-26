@@ -1,6 +1,7 @@
-package nl.tue.s2id90.group41;
+package nl.tue.s2id90.group41.players;
 
 
+import nl.tue.s2id90.group41.players.UninformedPlayer;
 import java.util.List;
 import nl.tue.s2id90.draughts.DraughtsState;
 import nl.tue.s2id90.draughts.player.DraughtsPlayer;

@@ -1,7 +1,6 @@
-package nl.tue.s2id90.group41;
+package nl.tue.s2id90.group41.players;
 
 
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import nl.tue.s2id90.draughts.DraughtsState;
