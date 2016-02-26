@@ -1,5 +1,6 @@
 package nl.tue.s2id90.group41;
 
+import nl.tue.s2id90.draughts.DraughtsState;
 import nl.tue.s2id90.game.GameState;
 import org10x10.dam.game.Move;
 
@@ -9,17 +10,19 @@ import org10x10.dam.game.Move;
  */
 public class GameNode {
     
-    private Move bestMove;
+    private final GeniusPlayer player;
     
     private final GameState<Move> gameState;
     
-    public GameNode(GameState<Move> gameState) {
+    private Move bestMove;
+    
+    public GameNode(GeniusPlayer player, GameState<Move> gameState) {
+        this.player = player;
         this.gameState = gameState;
     }
     
-    public int getRating(boolean isMe) {
-        // TODO: apply Koen's evaluation
-        return 0;
+    public int getRating() {
+        return (int) this.player.evaluateBoard((DraughtsState) this.gameState, null);
     }
     
     public GameState<Move> getGameState() {
