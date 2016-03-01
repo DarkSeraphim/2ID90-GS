@@ -44,83 +44,111 @@ public class GeniusPlayer extends DraughtsPlayer
         }
     }
     
-    protected double evaluateBoard(DraughtsState s, Move move)
+    protected double evaluateBoard(DraughtsState s)
     {   
         double totalValue = 0.0;
-        int b = 0, w = 0;
         for (int tile = 1; tile <= 50; tile++)
         {
-            double pieceValue;
+            double pieceValue = 0.0;
             int piece = s.getPiece(tile);
             
             //Calculate piece value
             if (piece != 0)
             {
-                continue;
-            }
-            
-            if (piece % 2 != 0) 
-            {
-                w++;
-            }
-            else
-            {
-                b++;
-            }
-            
-            pieceValue = 1.0;
-
-            //White
-            if ((piece % 2 != 0) == this.isWhite)
-            {
+                pieceValue = 1.0;
+                if ((isWhite && piece % 2 == 0) || (!isWhite && piece % 2 == 1))
+                {
+                    pieceValue *= -1.0;
+                }
+                
                 //Normal piece
                 if (piece < 3)
                 {
-                    if ((this.isWhite && tile > 45) || (!this.isWhite && tile < 6))
+                    if ((piece % 2 == 1 && tile > 45) || (piece % 2 == 0 && tile < 6))
                     {
-                        pieceValue *= 3.0;
+                        pieceValue *= 5.0;
                     }
                     else
                     {
-                        pieceValue *= ((((50 - tile) - ((50 - tile) % 5)) * 5) + 75) / 100;
+                        if (piece % 2 == 1)
+                        {
+                            pieceValue *= ((((50 - tile) - ((50 - tile) % 5)) * 5) + 75) / 100;
+                        }
+                        else
+                        {
+                            pieceValue *= ((((tile - 1) - ((tile - 1) % 5)) * 5) + 75) / 100;
+                        }
                     }
                 }
 
                 //King
                 else
                 {
-                    pieceValue *= 5.0;
+                    pieceValue *= 25.0;
                 }
-            }
-
-            //Black
-            /*else
-            {
-                pieceValue *= -1;
-
-                //Normal piece
-                if (piece < 3)
+                
+                //Defensive
+                int row = (tile - 1) / 5;
+                int column = -1;
+                if (row % 2 == 0)
                 {
-                    if (tile < 6)
-                    {
-                        pieceValue *= 3.0;
-                    }
-                    else
-                    {
-                        pieceValue *= ((((tile - 1) - ((tile - 1) % 5)) * 5) + 75) / 100;
-                    }
+                    column = 2 * (tile % 10) - 1;
                 }
-
-                //King
                 else
                 {
-                    pieceValue *= 5.0;
+                    column = 2 * ((tile - 6) % 10);
                 }
-            }*/
-            totalValue += pieceValue;
+                boolean[] defended = new boolean[4];
+                for (int i = 0; i < 4; i++)
+                {
+                    defended[i] = true;
+                }
+                if (row > 0 && column > 0)
+                {
+                    int otherPiece = s.getPiece(row - 1, column - 1);
+                    if (otherPiece == 0 || (otherPiece != 0 && otherPiece % 2 != piece % 2))
+                    {
+                        defended[0] = false;
+                    }
+                }
+                if (row > 0 && column < 9)
+                {
+                    int otherPiece = s.getPiece(row - 1, column + 1);
+                    if (otherPiece == 0 || (otherPiece != 0 && otherPiece % 2 != piece % 2))
+                    {
+                        defended[1] = false;
+                    }
+                }
+                if (row < 9 && column > 0)
+                {
+                    int otherPiece = s.getPiece(row + 1, column - 1);
+                    if (otherPiece == 0 || (otherPiece != 0 && otherPiece % 2 != piece % 2))
+                    {
+                        defended[2] = false;
+                    }
+                }
+                if (row < 9 && column < 9)
+                {
+                    int otherPiece = s.getPiece(row + 1, column + 1);
+                    if (otherPiece == 0 || (otherPiece != 0 && otherPiece % 2 != piece % 2))
+                    {
+                        defended[3] = false;
+                    }
+                }
+                if (defended[0] || defended[3])
+                {
+                    pieceValue *= 2.0;
+                }
+                if (defended[1] || defended[2])
+                {
+                    pieceValue *= 2.0;
+                }
+                
+                //return
+                totalValue += pieceValue;
+            }
         }
-        double x = 1 - (this.isWhite ? (this.whitePieces - w) / this.whitePieces : (this.blackPieces - b) / this.blackPieces);
-        return totalValue * x;
+        return totalValue;
     }
     
     @Override

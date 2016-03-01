@@ -22,7 +22,7 @@ public class GameNode {
     }
     
     public int getRating() {
-        return (int) this.player.evaluateBoard((DraughtsState) this.gameState, null);
+        return (int) this.player.evaluateBoard((DraughtsState) this.gameState);
     }
     
     public GameState<Move> getGameState() {
