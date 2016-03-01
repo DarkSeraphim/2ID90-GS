@@ -1,7 +1,6 @@
 package nl.tue.s2id90.group41;
 
 import java.util.concurrent.CancellationException;
-import nl.tue.s2id90.draughts.DraughtsState;
 import nl.tue.s2id90.game.GameState;
 import org10x10.dam.game.Move;
 
@@ -10,7 +9,7 @@ import org10x10.dam.game.Move;
  */
 public class AlphaBeta {
     
-    private static final int MAX_DEPTH = 5;
+    private static final int MAX_DEPTH = 6;
     
     private boolean stopped;
     
@@ -31,13 +30,14 @@ public class AlphaBeta {
     
     private int max(GameNode node, int depth, int alpha, int beta) {
         checkStop();
-        if (++depth == MAX_DEPTH) {
+        GameState<Move> state = node.getGameState();
+        if (++depth == MAX_DEPTH || state.getMoves().isEmpty()) {
             return node.getRating();
         }
                 
         Move bestMove = null;
         int bestAlpha = alpha;
-        GameState<Move> state = node.getGameState();
+        
         for (Move move : state.getMoves()) {
             state.doMove(move);
             alpha = Math.max(alpha, min(node, depth, alpha, beta));
@@ -60,11 +60,11 @@ public class AlphaBeta {
     
     private int min(GameNode node, int depth, int alpha, int beta) {
         checkStop();
-        if (++depth == MAX_DEPTH) {
+        GameState<Move> state = node.getGameState();
+        if (++depth == MAX_DEPTH || state.getMoves().isEmpty()) {
             return node.getRating();
         }
                 
-        GameState<Move> state = node.getGameState();
         for (Move move : state.getMoves()) {
             state.doMove(move);
             beta = Math.min(beta, max(node, depth, alpha, beta));

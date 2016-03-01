@@ -17,7 +17,11 @@ public class GeniusPlayer extends DraughtsPlayer
     
     private boolean isWhite;
     
+    private int blackKings;
+    
     private int blackPieces;
+    
+    private int whiteKings;
     
     private int whitePieces;
     
@@ -28,16 +32,20 @@ public class GeniusPlayer extends DraughtsPlayer
     }
     
     private void countPieces(DraughtsState ds) {
+        this.blackKings = 0;
         this.blackPieces = 0;
+        this.whiteKings = 0;
         this.whitePieces = 0;
         for (int piece : ds.getPieces()) {
             switch (piece) {
-                case DraughtsState.BLACKPIECE:
                 case DraughtsState.BLACKKING:
+                    this.blackKings++;
+                case DraughtsState.BLACKPIECE:
                     blackPieces++;
                     break;
-                case DraughtsState.WHITEFIELD:
                 case DraughtsState.WHITEKING:
+                    this.whiteKings++;
+                case DraughtsState.WHITEFIELD:
                     whitePieces++;
                     break;
             }
@@ -47,6 +55,7 @@ public class GeniusPlayer extends DraughtsPlayer
     protected double evaluateBoard(DraughtsState s)
     {   
         double totalValue = 0.0;
+        int black = 0, white = 0;
         for (int tile = 1; tile <= 50; tile++)
         {
             double pieceValue = 0.0;
@@ -61,12 +70,21 @@ public class GeniusPlayer extends DraughtsPlayer
                     pieceValue *= -1.0;
                 }
                 
+                if (piece % 2 == 0) 
+                {
+                    black++;
+                } 
+                else 
+                {
+                    white++;
+                }
+                
                 //Normal piece
                 if (piece < 3)
                 {
                     if ((piece % 2 == 1 && tile > 45) || (piece % 2 == 0 && tile < 6))
                     {
-                        pieceValue *= 5.0;
+                        pieceValue *= 2.0;
                     }
                     else
                     {
@@ -148,7 +166,21 @@ public class GeniusPlayer extends DraughtsPlayer
                 totalValue += pieceValue;
             }
         }
-        return totalValue;
+        double x = 0;
+        double y = 0;
+        double piecesBefore = this.isWhite ? this.whitePieces : this.blackPieces;
+        double enemyPiecesBefore = !this.isWhite ? this.whitePieces : this.blackPieces;
+        if (piecesBefore > 0) 
+        {
+            int piecesNow = this.isWhite ? white : black;
+            x = ((piecesBefore - piecesNow) / piecesBefore);
+        }
+        if (enemyPiecesBefore > 0)
+        {
+            int enemyPiecesNow = !this.isWhite ? white : black;
+            y = ((enemyPiecesBefore - enemyPiecesNow) / enemyPiecesBefore) * 2;
+        }
+        return (1 - x) * (y + 1) * totalValue;
     }
     
     @Override
